@@ -1,0 +1,30 @@
+<!-- accounts/templates/accounts/login.html -->
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Вход</title>
+</head>
+<body>
+    <h1>Вход</h1>
+    {% if messages %}
+        <ul>
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <form method="post">
+        {% csrf_token %}
+        <label for="phone_number">Номер телефона:</label>
+        <input type="text" id="phone_number" name="phone_number" required>
+        <br><br>
+        <label for="password">Пароль:</label>
+        <input type="password" id="password" name="password" required>
+        <br><br>
+        <button type="submit">Войти</button>
+    </form>
+    <a href="{% url 'index' %}">На главную</a>
+</body>
+</html>

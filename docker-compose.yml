@@ -1,0 +1,38 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: referral_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - "5432:5432"
+
+  web:
+    image: python:3.10-slim
+    command: >
+      bash -c "
+        pip install --upgrade pip &&
+        pip install -r requirements.txt &&
+        python manage.py migrate &&
+        python manage.py runserver 0.0.0.0:8000
+      "
+    volumes:
+      - .:/app
+    working_dir: /app
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/referral_db
+      - SMSAERO_EMAIL=your_smsaero_email
+      - SMSAERO_API_KEY=your_smsaero_api_key
+      - SECRET_KEY=your_secret_key
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:

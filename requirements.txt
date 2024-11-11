@@ -1,0 +1,14 @@
+Django==5.1.2
+djangorestframework==3.15.2
+djangorestframework-simplejwt==5.3.1
+psycopg2-binary==2.9.10
+smsaero_api==3.0.0
+python-dotenv==1.0.1
+django-cors-headers==4.6.0
+celery==5.4.0
+redis==5.2.0
+drf-yasg==1.21.8
+phonenumbers==8.13.48
+django-celery-results==2.4.0
+coverage
+drf-yasg

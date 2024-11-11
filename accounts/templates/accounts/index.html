@@ -1,0 +1,19 @@
+<!-- accounts/templates/accounts/index.html -->
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Главная</title>
+</head>
+<body>
+    <h1>Добро пожаловать в Реферальную Систему</h1>
+    {% if user.is_authenticated %}
+        <p>Вы вошли как {{ user.phone_number }}.</p>
+        <a href="{% url 'profile_page' %}">Профиль</a> |
+        <a href="{% url 'send_sms' %}">Отправить SMS</a>
+    {% else %}
+        <a href="{% url 'login' %}">Войти</a>
+    {% endif %}
+</body>
+</html>
