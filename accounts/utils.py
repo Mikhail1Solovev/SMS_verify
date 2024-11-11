@@ -1,5 +1,3 @@
-# accounts/utils.py
-
 import logging
 import os
 from pathlib import Path
@@ -7,10 +5,8 @@ from pathlib import Path
 from dotenv import load_dotenv
 from smsaero import SmsAero, SmsAeroException
 
-# Настройка логирования
 logger = logging.getLogger(__name__)
 
-# Загрузка переменных окружения из .env файла
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(os.path.join(BASE_DIR, '.env'))
 

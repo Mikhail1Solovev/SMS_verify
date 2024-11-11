@@ -1,5 +1,3 @@
-# accounts/models.py
-
 import uuid
 
 from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager,

@@ -1,16 +1,12 @@
-# referral_project/settings.py
-
 import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-# Базовый каталог
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Загрузка переменных окружения из .env файла
 load_dotenv(os.path.join(BASE_DIR, '.env'))
 
-# Секретный ключ
 SECRET_KEY = os.getenv('SECRET_KEY', 'your_default_secret_key')
 
 # Отладка
@@ -18,9 +14,8 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = []
 
-# Приложения
 INSTALLED_APPS = [
-    # Стандартные приложения Django
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -28,21 +23,18 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # Внешние приложения
     'rest_framework',
     'drf_yasg',
-    'corsheaders',  # Если используете CORS
+    'corsheaders',
 
-    # Ваши приложения
     'accounts',
 ]
 
-# Пользовательская модель
 AUTH_USER_MODEL = 'accounts.User'
 
 # Middleware
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',  # Если используете CORS
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -52,10 +44,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# URL конфигурация
 ROOT_URLCONF = 'referral_project.urls'
 
-# Шаблоны
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -72,10 +62,8 @@ TEMPLATES = [
     },
 ]
 
-# WSGI приложение
 WSGI_APPLICATION = 'referral_project.wsgi.application'
 
-# База данных
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -87,7 +75,6 @@ DATABASES = {
     }
 }
 
-# Пароли
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -95,10 +82,9 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
     },
-    # Добавьте другие валидаторы по необходимости
+
 ]
 
-# Международные настройки
 LANGUAGE_CODE = 'ru'
 
 TIME_ZONE = 'UTC'
@@ -109,17 +95,14 @@ USE_L10N = True
 
 USE_TZ = True
 
-# Статические файлы
 STATIC_URL = '/static/'
 
-# Caches
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
     }
 }
 
-# Настройки REST Framework
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -138,7 +121,7 @@ LOGGING = {
     'loggers': {
         'accounts': {
             'handlers': ['console'],
-            'level': 'DEBUG',  # Измените на INFO или WARNING в продакшене
+            'level': 'DEBUG',
         },
         'django': {
             'handlers': ['console'],

@@ -1,5 +1,3 @@
-# referral_project/urls.py
-
 from django.contrib import admin
 from django.urls import include, path, re_path
 
@@ -7,7 +5,7 @@ from .drf_yasg import schema_view  # Импортируем schema_view из drf
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('accounts/', include('accounts.urls')),  # Указываем префикс 'accounts/'
+    path('accounts/', include('accounts.urls')),
 
     # Swagger JSON/YAML
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),

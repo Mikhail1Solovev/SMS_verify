@@ -1,5 +1,3 @@
-# accounts/views.py
-
 import logging
 import random
 
@@ -17,7 +15,6 @@ from .utils import send_sms
 
 User = get_user_model()
 
-# Настройка логирования
 logger = logging.getLogger(__name__)
 
 

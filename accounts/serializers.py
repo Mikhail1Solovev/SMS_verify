@@ -1,5 +1,3 @@
-# accounts/serializers.py
-
 import phonenumbers
 from rest_framework import serializers
 
