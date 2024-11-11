@@ -1,11 +1,9 @@
-# docker-compose.yml
-
 version: '3.8'
 
 services:
   web:
     build: .
-    command: gunicorn referral_project.wsgi:application --bind 0.0.0.0:8000
+    command: bash -c "python manage.py collectstatic --noinput && python manage.py migrate && gunicorn referral_project.wsgi:application --bind 0.0.0.0:8000"
     volumes:
       - .:/code
     ports:
@@ -32,7 +30,7 @@ services:
 
   celery:
     build: .
-    command: celery -A referral_project worker --loglevel=info
+    command: bash -c "python manage.py migrate && celery -A referral_project worker --loglevel=info"
     volumes:
       - .:/code
     env_file:
@@ -43,7 +41,7 @@ services:
 
   celery-beat:
     build: .
-    command: celery -A referral_project beat --loglevel=info
+    command: bash -c "python manage.py migrate && celery -A referral_project beat --loglevel=info"
     volumes:
       - .:/code
     env_file:

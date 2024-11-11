@@ -4,8 +4,8 @@
 FROM python:3.10-slim
 
 # Устанавливаем переменные окружения
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
 # Устанавливаем зависимости системы
 RUN apt-get update && apt-get install -y \
@@ -23,9 +23,6 @@ RUN pip install -r requirements.txt
 
 # Копируем код приложения
 COPY . /code/
-
-# Собираем статику
-RUN python manage.py collectstatic --noinput
 
 # Запускаем приложение
 CMD ["gunicorn", "referral_project.wsgi:application", "--bind", "0.0.0.0:8000"]
