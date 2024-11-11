@@ -1,5 +1,3 @@
-<!-- accounts/templates/accounts/profile.html -->
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -11,6 +9,11 @@
     <p><strong>Номер телефона:</strong> {{ user.phone_number }}</p>
     <p><strong>Инвайт-код:</strong> {{ user.invite_code }}</p>
     <p><strong>Приглашён пользователем:</strong> {% if user.invited_by %}{{ user.invited_by.phone_number }}{% else %}Нет{% endif %}</p>
-    <a href="{% url 'logout' %}">Выйти</a> <!-- Ссылка на logout -->
+
+    <!-- Кнопка для выхода, отправляющая POST-запрос -->
+    <form action="{% url 'logout' %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Выйти</button>
+    </form>
 </body>
 </html>

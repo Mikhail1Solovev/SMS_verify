@@ -2,10 +2,12 @@ from django.contrib import admin
 from django.urls import include, path, re_path
 
 from .drf_yasg import schema_view  # Импортируем schema_view из drf_yasg.py
+from accounts.views import index
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
+    path('', index, name='index'),  # Указываем index как представление для главной страницы
 
     # Swagger JSON/YAML
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
