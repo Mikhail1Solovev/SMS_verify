@@ -1,0 +1,97 @@
+{
+  "info": {
+    "name": "Referral System API",
+    "description": "Postman collection for testing the referral system API.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "User Registration",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/accounts/login/",
+          "host": ["{{base_url}}"],
+          "path": ["accounts", "login"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\"phone_number\": \"+1234567890\"}"
+        },
+        "description": "Initiate user registration with phone number."
+      }
+    },
+    {
+      "name": "Verify Code",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/accounts/verify-code/{{phone_number}}/",
+          "host": ["{{base_url}}"],
+          "path": ["accounts", "verify-code", "{{phone_number}}"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\"code\": \"1234\"}"
+        },
+        "description": "Verify the SMS code sent to the user."
+      }
+    },
+    {
+      "name": "User Profile",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/accounts/profile-page/",
+          "host": ["{{base_url}}"],
+          "path": ["accounts", "profile-page"]
+        },
+        "description": "Get the profile information of the logged-in user."
+      }
+    },
+    {
+      "name": "Activate Invite Code",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/accounts/profile-page/",
+          "host": ["{{base_url}}"],
+          "path": ["accounts", "profile-page"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\"invite_code\": \"ABC123\"}"
+        },
+        "description": "Activate an invite code in the user profile."
+      }
+    }
+  ]
+}
