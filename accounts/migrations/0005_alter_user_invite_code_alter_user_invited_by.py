@@ -15,7 +15,10 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="user",
             name="invite_code",
-            field=models.CharField(blank=True, default=1, max_length=6, unique=True),
+            field=models.CharField(blank=True,
+                                   default=1,
+                                   max_length=6,
+                                   unique=True),
             preserve_default=False,
         ),
         migrations.AlterField(

@@ -13,10 +13,12 @@ class PhoneNumberSerializer(serializers.Serializer):
             parsed_number = phonenumbers.parse(value, None)
             # Проверяем валидность номера
             if not phonenumbers.is_valid_number(parsed_number):
-                raise serializers.ValidationError('Неверный номер телефона')
+                raise serializers.ValidationError("Неверный номер телефона")
         except phonenumbers.NumberParseException:
-            raise serializers.ValidationError('Неверный формат номера телефона')
-        return phonenumbers.format_number(parsed_number, phonenumbers.PhoneNumberFormat.E164)
+            raise serializers.ValidationError(
+                "Неверный формат номера телефона")
+        return phonenumbers.format_number(parsed_number,
+                                          phonenumbers.PhoneNumberFormat.E164)
 
 
 class VerificationCodeSerializer(serializers.Serializer):
@@ -30,11 +32,12 @@ class InviteCodeSerializer(serializers.Serializer):
 
 class UserProfileSerializer(serializers.ModelSerializer):
     invited_users = serializers.SerializerMethodField()
-    invited_by = serializers.CharField(source='invited_by.phone_number', read_only=True)
+    invited_by = serializers.CharField(source="invited_by.phone_number",
+                                       read_only=True)
 
     class Meta:
         model = User
-        fields = ['phone_number', 'invite_code', 'invited_by', 'invited_users']
+        fields = ["phone_number", "invite_code", "invited_by", "invited_users"]
 
     def get_invited_users(self, obj):
-        return obj.invited_users.values_list('phone_number', flat=True)
+        return obj.invited_users.values_list("phone_number", flat=True)

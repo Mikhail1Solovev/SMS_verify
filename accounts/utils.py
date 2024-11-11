@@ -8,10 +8,10 @@ from smsaero import SmsAero, SmsAeroException
 logger = logging.getLogger(__name__)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-load_dotenv(os.path.join(BASE_DIR, '.env'))
+load_dotenv(os.path.join(BASE_DIR, ".env"))
 
-SMSAERO_EMAIL = os.getenv('SMSAERO_EMAIL')
-SMSAERO_API_KEY = os.getenv('SMSAERO_API_KEY')
+SMSAERO_EMAIL = os.getenv("SMSAERO_EMAIL")
+SMSAERO_API_KEY = os.getenv("SMSAERO_API_KEY")
 
 
 def send_sms(phone: str, message: str) -> dict:
@@ -19,7 +19,8 @@ def send_sms(phone: str, message: str) -> dict:
     Отправляет СМС-сообщение.
 
     Параметры:
-    - phone (str): Номер телефона в виде строки с символом '+' (например, '+79174044144').
+    - phone (str): Номер телефона в виде строки с символом '+'
+      (например, '+79174044144').
     - message (str): Текст СМС-сообщения.
 
     Возвращает:
@@ -28,8 +29,15 @@ def send_sms(phone: str, message: str) -> dict:
     api = SmsAero(email=SMSAERO_EMAIL, api_key=SMSAERO_API_KEY)
     try:
         response = api.send_sms(phone, message)
-        logger.debug(f"SMS отправлено на {phone}: {message}")
+        logger.debug(
+            "SMS отправлено на номер %s: сообщение '%s'",
+            phone,
+            message,
+        )
         return response
     except SmsAeroException as e:
-        logger.error(f"Произошла ошибка при отправке СМС: {e}")
+        logger.error(
+            "Произошла ошибка при отправке СМС: %s",
+            str(e),
+        )
         return {"error": str(e)}

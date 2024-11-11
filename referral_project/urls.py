@@ -5,16 +5,24 @@ from .drf_yasg import schema_view  # Импортируем schema_view из drf
 from accounts.views import index
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('accounts/', include('accounts.urls')),
-    path('', index, name='index'),  # Указываем index как представление для главной страницы
-
+    path("admin/", admin.site.urls),
+    path("accounts/", include("accounts.urls")),
+    # Указываем index как представление для главной страницы
+    path("", index, name="index"),
     # Swagger JSON/YAML
-    re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
-
+    re_path(
+        r"^swagger(?P<format>\.json|\.yaml)$",
+        schema_view.without_ui(cache_timeout=0),
+        name="schema-json",
+    ),
     # Swagger UI
-    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-
+    path(
+        "swagger/",
+        schema_view.with_ui("swagger", cache_timeout=0),
+        name="schema-swagger-ui",
+    ),
     # ReDoc UI
-    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+    path("redoc/",
+         schema_view.with_ui("redoc", cache_timeout=0),
+         name="schema-redoc"),
 ]
