@@ -15,7 +15,7 @@ urlpatterns = [
     path("", index, name="index"),
     path("login/", LoginView.as_view(), name="login"),
     path("profile-page/", profile, name="profile_page"),
-    path("logout/", LogoutView.as_view(), name="logout"),  # Оставлен только один путь для logout
+    path("logout/", LogoutView.as_view(), name="logout"),
     path("api/profile/", UserProfileAPIView.as_view(), name="api_profile"),
     path(
         "api/activate-invite/",

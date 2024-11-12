@@ -1,24 +1,28 @@
+# accounts/tests.py
+
 from unittest.mock import patch
 from django.test import Client, TestCase
 from rest_framework.test import APIClient
 from rest_framework_simplejwt.tokens import AccessToken
 from django.core.cache import cache
-from .models import User
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
 class UserModelTests(TestCase):
     fixtures = ['test_users.json']
 
     def setUp(self):
-        self.user = User.objects.get(pk=1)
-        self.phone_number = self.user.phone_number
         self.password = "password123"
+        self.user = User.objects.get(pk=1)
+        self.superuser = User.objects.get(pk=2)
 
     def test_create_user(self):
         user = self.user
         self.assertEqual(
             user.phone_number,
-            self.phone_number,
+            "+79174044144",
             "Номер телефона не совпадает с ожидаемым."
         )
         self.assertIsNotNone(
@@ -30,12 +34,12 @@ class UserModelTests(TestCase):
             "Инвайт-код должен быть длиной 6 символов."
         )
         self.assertTrue(
-            user.check_password(self.password),
+            user.check_password("password123"),
             "Пароль должен быть установлен и зашифрован."
         )
 
     def test_create_superuser(self):
-        superuser = User.objects.get(pk=2)
+        superuser = self.superuser
         self.assertEqual(
             superuser.phone_number,
             "+79174044145",
@@ -51,10 +55,10 @@ class UserModelTests(TestCase):
         )
 
     def test_invite_user(self):
-        inviter = User.objects.get(pk=1)
+        inviter = self.user
         invited_user = User.objects.create_user(
-            phone_number="+79174044146",
-            password=self.password,
+            phone_number="+79174044146",  # Уникальный номер
+            password="password123",
             invited_by=inviter,
         )
         self.assertEqual(
@@ -66,17 +70,17 @@ class UserModelTests(TestCase):
         self.assertIn(
             invited_user,
             invitees,
-            "Приглашённый пользователь должен находиться в списке invitees "
-            "пригласившего пользователя."
+            "Приглашённый пользователь должен находиться в списке приглашенных."
         )
 
 
 class UserAuthenticationTests(TestCase):
+    fixtures = ['test_users.json']
 
     def setUp(self):
         self.client = Client()
         self.api_client = APIClient()
-        self.phone_number = "+79174044144"
+        self.phone_number = "+79174044144"  # Из фикстуры pk=1
         self.password = "password123"
         self.invalid_phone_number = "12345"
         self.user = User.objects.get(pk=1)
@@ -122,10 +126,6 @@ class UserAuthenticationTests(TestCase):
         phone_number_int = int(self.phone_number.replace("+", ""))
         cache_key = f"sms_code_{phone_number_int}"
         cache.set(cache_key, "1234", timeout=300)
-        self.client.post(
-            "/accounts/login/",
-            {"phone_number": self.phone_number}
-        )
         response = self.client.post("/accounts/login/", {"code": "1234"})
         self.assertIn(response.status_code, [200, 302])
         if response.status_code == 302:
@@ -137,10 +137,6 @@ class UserAuthenticationTests(TestCase):
         phone_number_int = int(self.phone_number.replace("+", ""))
         cache_key = f"sms_code_{phone_number_int}"
         cache.set(cache_key, "1234", timeout=300)
-        self.client.post(
-            "/accounts/login/",
-            {"phone_number": self.phone_number}
-        )
         response = self.client.post("/accounts/login/", {"code": "0000"})
         self.assertEqual(response.status_code, 200)
         self.assertContains(
@@ -154,23 +150,25 @@ class UserAuthenticationTests(TestCase):
 
 
 class ReferralCodeTests(TestCase):
+    fixtures = ['test_users.json']
 
     def setUp(self):
         self.client = Client()
         self.api_client = APIClient()
-        self.phone_number = "+79174044144"
         self.password = "password123"
         self.user = User.objects.get(pk=1)
-        self.referral_code = "ABC123"
+        self.referral_code = self.user.invite_code
 
     def authenticate_user(self, user):
         access_token = str(AccessToken.for_user(user))
         self.api_client.credentials(
-            HTTP_AUTHORIZATION="Bearer " + access_token)
+            HTTP_AUTHORIZATION="Bearer " + access_token
+        )
 
     def test_profile_referral_code_activation(self):
+        # Используем уникальный phone_number, не присутствующий в фикстуре
         another_user = User.objects.create_user(
-            phone_number="+79174044145",
+            phone_number="+79174044146",  # Новый уникальный номер
             password="password123",
         )
         self.authenticate_user(another_user)
@@ -197,12 +195,13 @@ class ReferralCodeTests(TestCase):
             )
 
     def test_referral_list(self):
+        # Используем уникальные phone_numbers
         referrer_user = User.objects.create_user(
-            phone_number="+79174044146",
+            phone_number="+79174044147",  # Новый уникальный номер
             password="password123",
         )
         User.objects.create_user(
-            phone_number="+79174044147",
+            phone_number="+79174044148",
             password="password123",
             invited_by=referrer_user,
         )

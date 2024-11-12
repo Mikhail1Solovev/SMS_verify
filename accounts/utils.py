@@ -4,6 +4,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 def send_sms(phone, message):
     """
     Отправка SMS через SMSAero API.
