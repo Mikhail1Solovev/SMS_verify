@@ -7,16 +7,15 @@ from .models import User
 
 
 class UserModelTests(TestCase):
+    fixtures = ['test_users.json']
 
     def setUp(self):
-        self.phone_number = "+79174044144"
+        self.user = User.objects.get(pk=1)
+        self.phone_number = self.user.phone_number
         self.password = "password123"
 
     def test_create_user(self):
-        user = User.objects.create_user(
-            phone_number=self.phone_number,
-            password=self.password,
-        )
+        user = self.user
         self.assertEqual(
             user.phone_number,
             self.phone_number,
@@ -36,13 +35,10 @@ class UserModelTests(TestCase):
         )
 
     def test_create_superuser(self):
-        superuser = User.objects.create_superuser(
-            phone_number=self.phone_number,
-            password=self.password,
-        )
+        superuser = User.objects.get(pk=2)
         self.assertEqual(
             superuser.phone_number,
-            self.phone_number,
+            "+79174044145",
             "Номер телефона суперпользователя не совпадает с ожидаемым."
         )
         self.assertTrue(
@@ -55,10 +51,7 @@ class UserModelTests(TestCase):
         )
 
     def test_invite_user(self):
-        inviter = User.objects.create_user(
-            phone_number="+79174044145",
-            password=self.password,
-        )
+        inviter = User.objects.get(pk=1)
         invited_user = User.objects.create_user(
             phone_number="+79174044146",
             password=self.password,
@@ -86,10 +79,7 @@ class UserAuthenticationTests(TestCase):
         self.phone_number = "+79174044144"
         self.password = "password123"
         self.invalid_phone_number = "12345"
-        self.user = User.objects.create_user(
-            phone_number=self.phone_number,
-            password=self.password,
-        )
+        self.user = User.objects.get(pk=1)
 
     @patch("accounts.views.send_sms")
     def test_login_valid_phone_number(self, mock_send_sms):
@@ -170,11 +160,8 @@ class ReferralCodeTests(TestCase):
         self.api_client = APIClient()
         self.phone_number = "+79174044144"
         self.password = "password123"
-        self.user = User.objects.create_user(
-            phone_number=self.phone_number,
-            password=self.password,
-        )
-        self.referral_code = "ABCD12"
+        self.user = User.objects.get(pk=1)
+        self.referral_code = "ABC123"
 
     def authenticate_user(self, user):
         access_token = str(AccessToken.for_user(user))

@@ -1,43 +1,32 @@
-import logging
 import os
-from pathlib import Path
-
-from dotenv import load_dotenv
-from smsaero import SmsAero, SmsAeroException
+import requests
+import logging
 
 logger = logging.getLogger(__name__)
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-load_dotenv(os.path.join(BASE_DIR, ".env"))
-
-SMSAERO_EMAIL = os.getenv("SMSAERO_EMAIL")
-SMSAERO_API_KEY = os.getenv("SMSAERO_API_KEY")
-
-
-def send_sms(phone: str, message: str) -> dict:
+def send_sms(phone, message):
     """
-    Отправляет СМС-сообщение.
+    Отправка SMS через SMSAero API.
 
-    Параметры:
-    - phone (str): Номер телефона в виде строки с символом '+'
-      (например, '+79174044144').
-    - message (str): Текст СМС-сообщения.
-
-    Возвращает:
-    - dict: Словарь с ответом от API SmsAero.
+    :param phone: Номер телефона в формате E.164 без знака '+'.
+    :param message: Текст сообщения.
+    :return: Словарь с результатом отправки.
     """
-    api = SmsAero(email=SMSAERO_EMAIL, api_key=SMSAERO_API_KEY)
+    sms_url = "https://gate.smsaero.ru/v2/sms/send"
+
     try:
-        response = api.send_sms(phone, message)
-        logger.debug(
-            "SMS отправлено на номер %s: сообщение '%s'",
-            phone,
-            message,
+        response = requests.post(
+            sms_url,
+            auth=(os.getenv("SMSAERO_EMAIL"), os.getenv("SMSAERO_API_KEY")),
+            data={
+                "number": phone,
+                "text": message,
+            }
         )
-        return response
-    except SmsAeroException as e:
-        logger.error(
-            "Произошла ошибка при отправке СМС: %s",
-            str(e),
-        )
-        return {"error": str(e)}
+        response.raise_for_status()
+        result = response.json()
+        logger.debug(f"SMS отправлено успешно: {result}")
+        return result
+    except requests.RequestException as e:
+        logger.error(f"Ошибка при отправке SMS: {e}")
+        return {"status": "error", "error": str(e)}

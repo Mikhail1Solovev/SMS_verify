@@ -142,6 +142,7 @@ class UserProfileAPIView(APIView):
             "invited_by": (
                 user.invited_by.phone_number if user.invited_by else None
             ),
+            "invited_users": user.invitees.values_list("phone_number", flat=True),
         }
         return Response(data, status=status.HTTP_200_OK)
 

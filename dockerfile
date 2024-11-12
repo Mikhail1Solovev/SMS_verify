@@ -1,5 +1,3 @@
-# Dockerfile
-
 # Используем официальный образ Python в качестве базового
 FROM python:3.10-slim
 
@@ -24,5 +22,4 @@ RUN pip install -r requirements.txt
 # Копируем код приложения
 COPY . /code/
 
-# Запускаем приложение
-CMD ["gunicorn", "referral_project.wsgi:application", "--bind", "0.0.0.0:8000"]
+

@@ -1,0 +1,28 @@
+[
+  {
+    "model": "accounts.user",
+    "pk": 1,
+    "fields": {
+      "phone_number": "+79174044144",
+      "password": "pbkdf2_sha256$260000$abcdefg$hijklmnopqrstuvwxyz1234567890=",  # Замените на реальный хеш
+      "invite_code": "ABC123",
+      "is_active": true,
+      "is_staff": false,
+      "is_superuser": false,
+      "invited_by": null
+    }
+  },
+  {
+    "model": "accounts.user",
+    "pk": 2,
+    "fields": {
+      "phone_number": "+79174044145",
+      "password": "pbkdf2_sha256$260000$mnopqr$stuvwxyz1234567890abcdefg=",  # Замените на реальный хеш
+      "invite_code": "XYZ789",
+      "is_active": true,
+      "is_staff": true,
+      "is_superuser": true,
+      "invited_by": null
+    }
+  }
+]

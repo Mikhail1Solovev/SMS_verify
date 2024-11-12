@@ -40,4 +40,4 @@ class UserProfileSerializer(serializers.ModelSerializer):
         fields = ["phone_number", "invite_code", "invited_by", "invited_users"]
 
     def get_invited_users(self, obj):
-        return obj.invited_users.values_list("phone_number", flat=True)
+        return obj.invitees.values_list("phone_number", flat=True)
